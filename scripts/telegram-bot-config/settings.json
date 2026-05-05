@@ -6,20 +6,25 @@
     "name": "/home/runner/workspace"
   },
   "currentSession": {
-    "id": "ses_20a8e02a7ffeN3Y6FKJ5E5X92n",
-    "title": "New session - 2026-05-05T00:03:01.592Z",
+    "id": "ses_20a70051dffewf8zE3l2fXex4s",
+    "title": "New session - 2026-05-05T00:35:47.042Z",
     "directory": "/home/runner/workspace"
   },
-  "pinnedMessageId": 2760,
+  "pinnedMessageId": 2836,
   "sessionDirectoryCache": {
     "version": 1,
-    "lastSyncedUpdatedAt": 1777940465293,
+    "lastSyncedUpdatedAt": 1777941416945,
     "directories": [
       {
         "worktree": "/home/runner/workspace",
-        "lastUpdated": 1777940465293
+        "lastUpdated": 1777941416945
       }
     ]
   },
-  "currentAgent": "plan"
+  "currentAgent": "build",
+  "currentModel": {
+    "providerID": "nvidia",
+    "modelID": "moonshotai/kimi-k2.6",
+    "variant": "default"
+  }
 }
