@@ -40,7 +40,7 @@ function fmtTokens(n: number) {
 export default function ChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
-  const [selectedModel, setSelectedModel] = useState("moonshotai/kimi-k2-instruct");
+  const [selectedModel, setSelectedModel] = useState("moonshotai/kimi-k2.6");
   const [modelDropdownOpen, setModelDropdownOpen] = useState(false);
   const [statsOpen, setStatsOpen] = useState(false);
   const [sessionId] = useState(() => `web-${Date.now()}`);

@@ -18,12 +18,15 @@ const OPENCODE_API_URL = process.env.OPENCODE_API_URL || "http://localhost:4096"
 const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || "";
 const NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1";
 
+const DEFAULT_MODEL = "moonshotai/kimi-k2.6";
+const FALLBACK_MODEL = "minimax/minimax-m2.7";
+
 const AVAILABLE_MODELS = [
+  { id: "moonshotai/kimi-k2.6", name: "Kimi K2.6 VLM", provider: "nvidia", contextLength: 262144 },
+  { id: "minimax/minimax-m2.7", name: "MiniMax M2.7", provider: "nvidia", contextLength: 65536 },
   { id: "moonshotai/kimi-k2-instruct", name: "Kimi K2 Instruct", provider: "nvidia", contextLength: 131072 },
   { id: "moonshotai/kimi-k2-thinking", name: "Kimi K2 Thinking", provider: "nvidia", contextLength: 131072 },
   { id: "moonshotai/kimi-k2.5", name: "Kimi K2.5 VLM", provider: "nvidia", contextLength: 262144 },
-  { id: "moonshotai/kimi-k2.6", name: "Kimi K2.6 VLM", provider: "nvidia", contextLength: 262144 },
-  { id: "minimax/minimax-m2.7", name: "MiniMax M2.7", provider: "nvidia", contextLength: 65536 },
 ];
 
 async function opencodeRequest(path: string, options: RequestInit = {}) {
@@ -180,16 +183,7 @@ router.get("/models", (_req, res) => {
   res.json(ListModelsResponse.parse({ models: AVAILABLE_MODELS }));
 });
 
-router.post("/chat", async (req, res) => {
-  const body = ChatWithAIBody.parse(req.body);
-  const modelId = body.model || "moonshotai/kimi-k2-instruct";
-  const sessionId = body.sessionId || `web-${Date.now()}`;
-
-  const messages = [
-    ...(body.history || []),
-    { role: "user", content: body.message },
-  ];
-
+async function callNvidiaChat(modelId: string, messages: Array<{ role: string; content: string }>) {
   const response = await fetch(`${NVIDIA_BASE_URL}/chat/completions`, {
     method: "POST",
     headers: {
@@ -203,6 +197,28 @@ router.post("/chat", async (req, res) => {
       temperature: 0.7,
     }),
   });
+  return response;
+}
+
+router.post("/chat", async (req, res) => {
+  const body = ChatWithAIBody.parse(req.body);
+  const requestedModel = body.model || DEFAULT_MODEL;
+  const sessionId = body.sessionId || `web-${Date.now()}`;
+
+  const messages = [
+    ...(body.history || []),
+    { role: "user", content: body.message },
+  ];
+
+  // Try primary model first, fall back to FALLBACK_MODEL on error
+  let response = await callNvidiaChat(requestedModel, messages);
+  let usedModel = requestedModel;
+
+  if (!response.ok && requestedModel !== FALLBACK_MODEL) {
+    req.log.warn({ requestedModel, status: response.status }, "Primary model failed, trying fallback");
+    response = await callNvidiaChat(FALLBACK_MODEL, messages);
+    usedModel = FALLBACK_MODEL;
+  }
 
   if (!response.ok) {
     const err = await response.text();
@@ -219,7 +235,7 @@ router.post("/chat", async (req, res) => {
 
   res.json(ChatWithAIResponse.parse({
     content,
-    model: modelId,
+    model: usedModel,
     sessionId,
     promptTokens: usage?.prompt_tokens,
     completionTokens: usage?.completion_tokens,
