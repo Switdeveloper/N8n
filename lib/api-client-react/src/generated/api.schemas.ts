@@ -67,6 +67,9 @@ export interface ChatResponse {
   content: string;
   model: string;
   sessionId?: string;
+  promptTokens?: number;
+  completionTokens?: number;
+  totalTokens?: number;
 }
 
 export type ListSessions200 = {

@@ -300,6 +300,12 @@ components:
           type: string
         sessionId:
           type: string
+        promptTokens:
+          type: integer
+        completionTokens:
+          type: integer
+        totalTokens:
+          type: integer
       required:
         - content
         - model

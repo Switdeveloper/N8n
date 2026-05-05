@@ -212,10 +212,19 @@ router.post("/chat", async (req, res) => {
 
   const data = await response.json() as {
     choices?: Array<{ message?: { content?: string } }>;
+    usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number };
   };
   const content = data.choices?.[0]?.message?.content || "";
+  const usage = data.usage;
 
-  res.json(ChatWithAIResponse.parse({ content, model: modelId, sessionId }));
+  res.json(ChatWithAIResponse.parse({
+    content,
+    model: modelId,
+    sessionId,
+    promptTokens: usage?.prompt_tokens,
+    completionTokens: usage?.completion_tokens,
+    totalTokens: usage?.total_tokens,
+  }));
 });
 
 export default router;

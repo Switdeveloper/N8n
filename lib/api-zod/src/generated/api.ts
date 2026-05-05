@@ -136,4 +136,7 @@ export const ChatWithAIResponse = zod.object({
   content: zod.string(),
   model: zod.string(),
   sessionId: zod.string().optional(),
+  promptTokens: zod.number().optional(),
+  completionTokens: zod.number().optional(),
+  totalTokens: zod.number().optional(),
 });
