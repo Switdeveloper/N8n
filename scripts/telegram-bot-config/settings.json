@@ -10,21 +10,21 @@
     "title": "New session - 2026-05-05T00:35:47.042Z",
     "directory": "/home/runner/workspace"
   },
-  "pinnedMessageId": 2836,
+  "pinnedMessageId": 2876,
   "sessionDirectoryCache": {
     "version": 1,
-    "lastSyncedUpdatedAt": 1777941416945,
+    "lastSyncedUpdatedAt": 1777986945241,
     "directories": [
       {
         "worktree": "/home/runner/workspace",
-        "lastUpdated": 1777941416945
+        "lastUpdated": 1777986945241
       }
     ]
   },
   "currentAgent": "build",
   "currentModel": {
     "providerID": "nvidia",
-    "modelID": "moonshotai/kimi-k2.6",
+    "modelID": "minimaxai/minimax-m2.7",
     "variant": "default"
   }
 }

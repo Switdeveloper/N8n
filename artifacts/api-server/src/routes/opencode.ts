@@ -18,15 +18,15 @@ const OPENCODE_API_URL = process.env.OPENCODE_API_URL || "http://localhost:4096"
 const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || "";
 const NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1";
 
-const DEFAULT_MODEL = "minimax/minimax-m2.7";
-const FALLBACK_MODEL = "moonshotai/kimi-k2.6";
+const DEFAULT_MODEL = "minimaxai/minimax-m2.7";
+const FALLBACK_MODEL = "moonshotai/kimi-k2-instruct";
 
 const AVAILABLE_MODELS = [
-  { id: "minimax/minimax-m2.7", name: "MiniMax M2.7", provider: "nvidia", contextLength: 65536 },
-  { id: "moonshotai/kimi-k2.6", name: "Kimi K2.6 VLM", provider: "nvidia", contextLength: 262144 },
+  { id: "minimaxai/minimax-m2.7", name: "MiniMax M2.7", provider: "nvidia", contextLength: 65536 },
+  { id: "minimaxai/minimax-m2.5", name: "MiniMax M2.5", provider: "nvidia", contextLength: 65536 },
   { id: "moonshotai/kimi-k2-instruct", name: "Kimi K2 Instruct", provider: "nvidia", contextLength: 131072 },
   { id: "moonshotai/kimi-k2-thinking", name: "Kimi K2 Thinking", provider: "nvidia", contextLength: 131072 },
-  { id: "moonshotai/kimi-k2.5", name: "Kimi K2.5 VLM", provider: "nvidia", contextLength: 262144 },
+  { id: "moonshotai/kimi-k2.6", name: "Kimi K2.6 VLM", provider: "nvidia", contextLength: 262144 },
 ];
 
 async function opencodeRequest(path: string, options: RequestInit = {}) {

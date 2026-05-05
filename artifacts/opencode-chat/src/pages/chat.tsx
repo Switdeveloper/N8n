@@ -30,15 +30,15 @@ interface SessionStats {
   byModel: Record<string, number>;
 }
 
-const DEFAULT_MODEL = "minimax/minimax-m2.7";
-const FALLBACK_MODEL = "moonshotai/kimi-k2.6";
+const DEFAULT_MODEL = "minimaxai/minimax-m2.7";
+const FALLBACK_MODEL = "moonshotai/kimi-k2-instruct";
 
 const MODEL_LABELS: Record<string, string> = {
-  "minimax/minimax-m2.7":        "MiniMax M2.7",
-  "moonshotai/kimi-k2.6":        "Kimi K2.6 VLM",
+  "minimaxai/minimax-m2.7":      "MiniMax M2.7",
+  "minimaxai/minimax-m2.5":      "MiniMax M2.5",
   "moonshotai/kimi-k2-instruct": "Kimi K2 Instruct",
   "moonshotai/kimi-k2-thinking": "Kimi K2 Thinking",
-  "moonshotai/kimi-k2.5":        "Kimi K2.5 VLM",
+  "moonshotai/kimi-k2.6":        "Kimi K2.6 VLM",
 };
 
 function fmtTokens(n: number) {
