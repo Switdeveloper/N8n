@@ -1,0 +1,16 @@
+{
+  "name": "N8n Workspace",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
+  "postCreateCommand": "npm install -g n8n",
+  "portsAttributes": {
+    "5678": {
+      "label": "N8n",
+      "onAutoForward": "openPreview"
+    }
+  }
+}
