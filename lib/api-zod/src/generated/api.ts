@@ -14,3 +14,126 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * Returns whether the OpenCode server is running and its version
+ * @summary Get OpenCode server status
+ */
+export const GetOpencodeStatusResponse = zod.object({
+  running: zod.boolean(),
+  version: zod.string().optional(),
+  model: zod.string().optional(),
+});
+
+/**
+ * @summary List all sessions
+ */
+export const ListSessionsResponse = zod.object({
+  sessions: zod.array(
+    zod.object({
+      id: zod.string(),
+      title: zod.string().optional(),
+      model: zod.string().optional(),
+      createdAt: zod.string().optional(),
+      updatedAt: zod.string().optional(),
+    }),
+  ),
+});
+
+/**
+ * @summary Create a new session
+ */
+export const CreateSessionResponse = zod.object({
+  id: zod.string(),
+  title: zod.string().optional(),
+  model: zod.string().optional(),
+  createdAt: zod.string().optional(),
+  updatedAt: zod.string().optional(),
+});
+
+/**
+ * @summary Get messages for a session
+ */
+export const GetSessionMessagesParams = zod.object({
+  sessionId: zod.coerce.string(),
+});
+
+export const GetSessionMessagesResponse = zod.object({
+  messages: zod.array(
+    zod.object({
+      id: zod.string(),
+      role: zod.enum(["user", "assistant", "system"]),
+      content: zod.string(),
+      createdAt: zod.string().optional(),
+      sessionId: zod.string().optional(),
+    }),
+  ),
+});
+
+/**
+ * @summary Send a message to a session
+ */
+export const SendMessageParams = zod.object({
+  sessionId: zod.coerce.string(),
+});
+
+export const SendMessageBody = zod.object({
+  content: zod.string(),
+  model: zod.string().optional(),
+});
+
+export const SendMessageResponse = zod.object({
+  id: zod.string(),
+  role: zod.enum(["user", "assistant", "system"]),
+  content: zod.string(),
+  createdAt: zod.string().optional(),
+  sessionId: zod.string().optional(),
+});
+
+/**
+ * @summary Abort current task in session
+ */
+export const AbortSessionParams = zod.object({
+  sessionId: zod.coerce.string(),
+});
+
+export const AbortSessionResponse = zod.object({
+  success: zod.boolean(),
+});
+
+/**
+ * @summary List available models
+ */
+export const ListModelsResponse = zod.object({
+  models: zod.array(
+    zod.object({
+      id: zod.string(),
+      name: zod.string(),
+      provider: zod.string(),
+      contextLength: zod.number().optional(),
+    }),
+  ),
+});
+
+/**
+ * @summary Chat directly with NVIDIA AI (no opencode session)
+ */
+export const ChatWithAIBody = zod.object({
+  message: zod.string(),
+  model: zod.string().optional(),
+  sessionId: zod.string().optional(),
+  history: zod
+    .array(
+      zod.object({
+        role: zod.string(),
+        content: zod.string(),
+      }),
+    )
+    .optional(),
+});
+
+export const ChatWithAIResponse = zod.object({
+  content: zod.string(),
+  model: zod.string(),
+  sessionId: zod.string().optional(),
+});

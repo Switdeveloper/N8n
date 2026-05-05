@@ -8,3 +8,79 @@
 export interface HealthStatus {
   status: string;
 }
+
+export interface OpencodeStatus {
+  running: boolean;
+  version?: string;
+  model?: string;
+}
+
+export interface Session {
+  id: string;
+  title?: string;
+  model?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export type MessageRole = (typeof MessageRole)[keyof typeof MessageRole];
+
+export const MessageRole = {
+  user: "user",
+  assistant: "assistant",
+  system: "system",
+} as const;
+
+export interface Message {
+  id: string;
+  role: MessageRole;
+  content: string;
+  createdAt?: string;
+  sessionId?: string;
+}
+
+export interface SendMessageRequest {
+  content: string;
+  model?: string;
+}
+
+export interface Model {
+  id: string;
+  name: string;
+  provider: string;
+  contextLength?: number;
+}
+
+export type ChatRequestHistoryItem = {
+  role: string;
+  content: string;
+};
+
+export interface ChatRequest {
+  message: string;
+  model?: string;
+  sessionId?: string;
+  history?: ChatRequestHistoryItem[];
+}
+
+export interface ChatResponse {
+  content: string;
+  model: string;
+  sessionId?: string;
+}
+
+export type ListSessions200 = {
+  sessions: Session[];
+};
+
+export type GetSessionMessages200 = {
+  messages: Message[];
+};
+
+export type AbortSession200 = {
+  success: boolean;
+};
+
+export type ListModels200 = {
+  models: Model[];
+};

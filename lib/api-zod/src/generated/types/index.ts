@@ -6,4 +6,17 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from "./abortSession200";
+export * from "./chatRequest";
+export * from "./chatRequestHistoryItem";
+export * from "./chatResponse";
+export * from "./getSessionMessages200";
 export * from "./healthStatus";
+export * from "./listModels200";
+export * from "./listSessions200";
+export * from "./message";
+export * from "./messageRole";
+export * from "./model";
+export * from "./opencodeStatus";
+export * from "./sendMessageRequest";
+export * from "./session";

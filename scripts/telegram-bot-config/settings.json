@@ -1,0 +1,24 @@
+{
+  "scheduledTasks": [],
+  "currentProject": {
+    "id": "5b0eedb94b711dbb6d2e8093f3c96d7f8ba95536",
+    "worktree": "/home/runner/workspace",
+    "name": "/home/runner/workspace"
+  },
+  "currentSession": {
+    "id": "ses_20a8e02a7ffeN3Y6FKJ5E5X92n",
+    "title": "New session - 2026-05-05T00:03:01.592Z",
+    "directory": "/home/runner/workspace"
+  },
+  "pinnedMessageId": 2760,
+  "sessionDirectoryCache": {
+    "version": 1,
+    "lastSyncedUpdatedAt": 1777939393125,
+    "directories": [
+      {
+        "worktree": "/home/runner/workspace",
+        "lastUpdated": 1777939393125
+      }
+    ]
+  }
+}

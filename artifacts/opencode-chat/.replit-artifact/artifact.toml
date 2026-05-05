@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "OpenCode Chat"
+version = "1.0.0"
+id = "artifacts/opencode-chat"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22560
+
+[services.development]
+run = "pnpm --filter @workspace/opencode-chat run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/opencode-chat", "run", "build" ]
+publicDir = "artifacts/opencode-chat/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22560"
+BASE_PATH = "/"

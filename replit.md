@@ -1,27 +1,58 @@
-# Workspace
+# OpenCode Chat — NVIDIA AI Web Interface
 
 ## Overview
+A web-based chat interface for interacting with NVIDIA NIM AI models (Kimi K2, Kimi K2.6, MiniMax M2.7), powered by opencode and connected to Telegram for remote access.
 
-pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
+## Architecture
 
-## Stack
+### Artifacts
+- **`artifacts/opencode-chat`** — React + Vite web UI (serves at `/`, port 22560)
+- **`artifacts/api-server`** — Express API server (serves at `/api`, port 8080)
 
-- **Monorepo tool**: pnpm workspaces
-- **Node.js version**: 24
-- **Package manager**: pnpm
-- **TypeScript version**: 5.9
-- **API framework**: Express 5
-- **Database**: PostgreSQL + Drizzle ORM
-- **Validation**: Zod (`zod/v4`), `drizzle-zod`
-- **API codegen**: Orval (from OpenAPI spec)
-- **Build**: esbuild (CJS bundle)
+### Workflows
+- `artifacts/opencode-chat: web` — Vite dev server for the chat UI
+- `artifacts/api-server: API Server` — Backend API
+- `Telegram Bot` — @grinev/opencode-telegram-bot connecting to opencode server
+- `artifacts/mockup-sandbox: Component Preview Server` — Canvas design sandbox
 
-## Key Commands
+## AI Models (NVIDIA NIM)
+All via `https://integrate.api.nvidia.com/v1` using `NVIDIA_API_KEY`:
+- `moonshotai/kimi-k2-instruct` — Default model (1T params, 128K ctx)
+- `moonshotai/kimi-k2-thinking` — Chain-of-thought reasoning
+- `moonshotai/kimi-k2.5` — Multimodal VLM (256K ctx)
+- `moonshotai/kimi-k2.6` — Latest VLM
+- `minimax/minimax-m2.7` — 230B params
 
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- `pnpm --filter @workspace/api-server run dev` — run API server locally
+## Key Files
+- `~/.config/opencode/config.json` — OpenCode config with NVIDIA provider
+- `scripts/start-telegram-bot.sh` — Telegram bot startup script
+- `scripts/telegram-bot-config/.env` — Bot config (auto-written at startup)
+- `artifacts/api-server/src/routes/opencode.ts` — OpenCode + NVIDIA API routes
+- `artifacts/opencode-chat/src/pages/chat.tsx` — Main chat UI
+- `lib/api-spec/openapi.yaml` — API contract
 
-See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
+## API Endpoints
+- `GET /api/opencode/status` — OpenCode server health
+- `GET /api/opencode/models` — List available AI models
+- `GET /api/opencode/sessions` — List opencode sessions
+- `POST /api/opencode/sessions` — Create new session
+- `GET /api/opencode/sessions/:id/messages` — Get session messages
+- `POST /api/opencode/sessions/:id/messages` — Send message to session
+- `POST /api/opencode/sessions/:id/abort` — Abort current task
+- `POST /api/opencode/chat` — Direct NVIDIA AI chat (no session)
+
+## Secrets
+- `NVIDIA_API_KEY` — NVIDIA NIM API key
+- `TELEGRAM_BOT_TOKEN` — Telegram bot token
+- `SESSION_SECRET` — Session secret
+
+## Telegram Bot
+- Allowed user ID: `5039241656`
+- Bot auto-starts opencode server on port 4096
+- Default model: `moonshotai/kimi-k2-instruct` via NVIDIA
+- Configured via `OPENCODE_TELEGRAM_HOME` env var
+
+## Environment Variables
+- `NVIDIA_API_KEY` — Set in Replit secrets
+- `TELEGRAM_BOT_TOKEN` — Set in Replit secrets
+- Opencode config: `~/.config/opencode/config.json`

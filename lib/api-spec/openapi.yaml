@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: opencode
+    description: OpenCode AI operations
 paths:
   /healthz:
     get:
@@ -24,6 +26,164 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /opencode/status:
+    get:
+      operationId: getOpencodeStatus
+      tags: [opencode]
+      summary: Get OpenCode server status
+      description: Returns whether the OpenCode server is running and its version
+      responses:
+        "200":
+          description: Status info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpencodeStatus"
+
+  /opencode/sessions:
+    get:
+      operationId: listSessions
+      tags: [opencode]
+      summary: List all sessions
+      responses:
+        "200":
+          description: List of sessions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sessions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Session"
+                required:
+                  - sessions
+    post:
+      operationId: createSession
+      tags: [opencode]
+      summary: Create a new session
+      responses:
+        "200":
+          description: New session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+
+  /opencode/sessions/{sessionId}/messages:
+    get:
+      operationId: getSessionMessages
+      tags: [opencode]
+      summary: Get messages for a session
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Messages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Message"
+                required:
+                  - messages
+    post:
+      operationId: sendMessage
+      tags: [opencode]
+      summary: Send a message to a session
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendMessageRequest"
+      responses:
+        "200":
+          description: Message sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+
+  /opencode/sessions/{sessionId}/abort:
+    post:
+      operationId: abortSession
+      tags: [opencode]
+      summary: Abort current task in session
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Aborted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                required:
+                  - success
+
+  /opencode/models:
+    get:
+      operationId: listModels
+      tags: [opencode]
+      summary: List available models
+      responses:
+        "200":
+          description: Available models
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  models:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Model"
+                required:
+                  - models
+
+  /opencode/chat:
+    post:
+      operationId: chatWithAI
+      tags: [opencode]
+      summary: Chat directly with NVIDIA AI (no opencode session)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatRequest"
+      responses:
+        "200":
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +194,112 @@ components:
       required:
         - status
 
+    OpencodeStatus:
+      type: object
+      properties:
+        running:
+          type: boolean
+        version:
+          type: string
+        model:
+          type: string
+      required:
+        - running
+
+    Session:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        model:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+        role:
+          type: string
+          enum: [user, assistant, system]
+        content:
+          type: string
+        createdAt:
+          type: string
+        sessionId:
+          type: string
+      required:
+        - id
+        - role
+        - content
+
+    SendMessageRequest:
+      type: object
+      properties:
+        content:
+          type: string
+        model:
+          type: string
+      required:
+        - content
+
+    Model:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        provider:
+          type: string
+        contextLength:
+          type: integer
+      required:
+        - id
+        - name
+        - provider
+
+    ChatRequest:
+      type: object
+      properties:
+        message:
+          type: string
+        model:
+          type: string
+        sessionId:
+          type: string
+        history:
+          type: array
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+              content:
+                type: string
+            required:
+              - role
+              - content
+      required:
+        - message
+
+    ChatResponse:
+      type: object
+      properties:
+        content:
+          type: string
+        model:
+          type: string
+        sessionId:
+          type: string
+      required:
+        - content
+        - model
