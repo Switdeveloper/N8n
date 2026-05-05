@@ -13,11 +13,11 @@
   "pinnedMessageId": 2876,
   "sessionDirectoryCache": {
     "version": 1,
-    "lastSyncedUpdatedAt": 1777986945241,
+    "lastSyncedUpdatedAt": 1778003243449,
     "directories": [
       {
         "worktree": "/home/runner/workspace",
-        "lastUpdated": 1777986945241
+        "lastUpdated": 1778003243449
       }
     ]
   },
